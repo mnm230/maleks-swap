@@ -708,8 +708,8 @@
             updateDisplay();
             updateRatesMatrix();
             
-            // Faster update interval
-            updateInterval = setInterval(updateRates, 3000); // 3 seconds instead of 5
+            // Set update interval to 5 seconds
+            updateInterval = setInterval(updateRates, 5000);
         });
 
         // Optimized cleanup

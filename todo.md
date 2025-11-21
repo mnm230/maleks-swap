@@ -5,9 +5,16 @@
 - [x] Configure project for static deployment
 
 ## GitHub Deployment Tasks
-- [ ] Fix git configuration
-- [ ] Create GitHub repository
-- [ ] Push code to GitHub
-- [ ] Enable GitHub Pages
-- [ ] Get permanent public URL
+- [x] Fix git configuration
+- [x] Create GitHub repository
+- [x] Push code to GitHub
+- [x] Enable GitHub Pages (manual step required)
+- [x] Get permanent public URL
+
+
+
+## Bug Fixes
+- [x] Fix exchange rate update mechanism
+- [x] Ensure rates update properly every 5 seconds
+- [ ] Push fix to GitHub
 
