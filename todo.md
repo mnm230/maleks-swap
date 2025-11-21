@@ -16,5 +16,12 @@
 ## Bug Fixes
 - [x] Fix exchange rate update mechanism
 - [x] Ensure rates update properly every 5 seconds
-- [ ] Push fix to GitHub
+- [x] Push fix to GitHub
+
+
+
+## Rate Accuracy Issues
+- [x] Research current accurate USDT to GBP rate
+- [x] Fix USDT to GBP exchange rate
+- [ ] Update and deploy corrected rates
 
