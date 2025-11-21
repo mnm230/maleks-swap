@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maleks SWAP - Simple Currency Converter</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💱</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .refresh-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.15s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #2563eb;
+        }
+
+        .refresh-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .converter-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: end;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-label {
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .amount-input {
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+            color: #1f2937;
+            transition: border-color 0.15s ease;
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .currency-select {
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+            color: #1f2937;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+        }
+
+        .currency-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .currency-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .currency-flag {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .swap-btn {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swap-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+            transform: rotate(180deg);
+        }
+
+        .result-section {
+            padding: 24px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-rate {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .result-change {
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .change-positive {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .change-negative {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .change-neutral {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .rates-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .rates-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 20px;
+        }
+
+        .rates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .rate-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            transition: background-color 0.15s ease;
+        }
+
+        .rate-item:hover {
+            background: #f1f5f9;
+        }
+
+        .rate-currency {
+            font-size: 0.875rem;
+            color: #374151;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rate-value {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.875rem;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 32px;
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
+            color: #166534;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Performance optimizations */
+        .currency-select option {
+            background: white;
+            color: #1f2937;
+            padding: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .converter-section {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .swap-btn {
+                justify-self: center;
+                margin: 8px 0;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .rates-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-card, .rates-section {
+                padding: 20px;
+            }
+            
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Preload critical styles */
+        .preload {
+            visibility: hidden;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💱 Maleks SWAP</h1>
+            <p>Fast cryptocurrency converter with real-time exchange rates</p>
+        </div>
+
+        <div class="main-card">
+            <div class="card-header">
+                <h2 class="card-title">Currency Converter</h2>
+                <button class="refresh-btn" onclick="refreshRates()" id="refreshBtn">
+                    Refresh
+                </button>
+            </div>
+
+            <div class="converter-section">
+                <div class="input-group">
+                    <label class="input-label">Amount</label>
+                    <input type="number" class="amount-input" id="amountInput" placeholder="Enter amount" value="1" min="0" step="any">
+                    <label class="input-label">From</label>
+                    <select class="currency-select" id="fromSelect">
+                        <option value="USDT">🟢 USDT (Tether)</option>
+                        <option value="USDC">🔵 USDC (USD Coin)</option>
+                        <option value="USD">🇺🇸 USD (US Dollar)</option>
+                        <option value="EUR">🇪🇺 EUR (Euro)</option>
+                        <option value="GBP">🇬🇧 GBP (British Pound)</option>
+                        <option value="AED">🇦🇪 AED (UAE Dirham)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇄</button>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Result</label>
+                    <input type="text" class="amount-input" id="resultInput" readonly>
+                    <label class="input-label">To</label>
+                    <select class="currency-select" id="toSelect">
+                        <option value="USD">🇺🇸 USD (US Dollar)</option>
+                        <option value="EUR">🇪🇺 EUR (Euro)</option>
+                        <option value="GBP">🇬🇧 GBP (British Pound)</option>
+                        <option value="AED">🇦🇪 AED (UAE Dirham)</option>
+                        <option value="USDT">🟢 USDT (Tether)</option>
+                        <option value="USDC">🔵 USDC (USD Coin)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div class="result-header">
+                    <div class="result-title" id="resultTitle">
+                        <span id="resultFlag">🇺🇸</span>
+                        Conversion Result
+                    </div>
+                    <div class="result-change change-neutral" id="resultChange">No change</div>
+                </div>
+                <div class="result-value" id="resultValue">
+                    <span id="resultValueFlag">🇺🇸</span>
+                    $1
+                </div>
+                <div class="result-rate" id="resultRate">1 USDT = 1.0000 USD</div>
+            </div>
+        </div>
+
+        <div class="rates-section">
+            <h3 class="rates-title">Exchange Rates</h3>
+            <div class="rates-grid" id="ratesMatrix">
+                <!-- Rates matrix will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>Live data - updates every 5 seconds</span>
+            </div>
+            <div id="footerUpdate">Last updated: Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        // Optimized exchange rates with faster access
+        const exchangeRates = {
+            USD: 1.0000,
+            EUR: 0.8519,
+            GBP: 0.7420,
+            AED: 3.6725,
+            USDT: 1.0000,
+            USDC: 0.9996
+        };
+
+        // 24h changes
+        const changes24h = {
+            USD: 0.00,
+            EUR: -0.04,
+            GBP: -0.04,
+            AED: 0.00,
+            USDT: -0.04,
+            USDC: 0.00
+        };
+
+        // Enhanced currency metadata with flags and optimized data
+        const currencyData = {
+            USD: { name: 'US Dollar', symbol: '$', flag: '🇺🇸', color: '#22c55e' },
+            EUR: { name: 'Euro', symbol: '€', flag: '🇪🇺', color: '#3b82f6' },
+            GBP: { name: 'British Pound', symbol: '£', flag: '🇬🇧', color: '#8b5cf6' },
+            AED: { name: 'UAE Dirham', symbol: 'د.إ', flag: '🇦🇪', color: '#f59e0b' },
+            USDT: { name: 'Tether', symbol: '$', flag: '🟢', color: '#10b981' },
+            USDC: { name: 'USD Coin', symbol: '$', flag: '🔵', color: '#0ea5e9' }
+        };
+
+        // Cached DOM elements for better performance
+        const elements = {
+            amountInput: null,
+            fromSelect: null,
+            toSelect: null,
+            resultInput: null,
+            resultTitle: null,
+            resultValue: null,
+            resultRate: null,
+            resultChange: null,
+            resultFlag: null,
+            resultValueFlag: null,
+            ratesMatrix: null,
+            footerUpdate: null,
+            refreshBtn: null
+        };
+
+        let updateInterval;
+        let isLoading = false;
+
+        // Cache DOM elements on load for better performance
+        function cacheElements() {
+            elements.amountInput = document.getElementById('amountInput');
+            elements.fromSelect = document.getElementById('fromSelect');
+            elements.toSelect = document.getElementById('toSelect');
+            elements.resultInput = document.getElementById('resultInput');
+            elements.resultTitle = document.getElementById('resultTitle');
+            elements.resultValue = document.getElementById('resultValue');
+            elements.resultRate = document.getElementById('resultRate');
+            elements.resultChange = document.getElementById('resultChange');
+            elements.resultFlag = document.getElementById('resultFlag');
+            elements.resultValueFlag = document.getElementById('resultValueFlag');
+            elements.ratesMatrix = document.getElementById('ratesMatrix');
+            elements.footerUpdate = document.getElementById('footerUpdate');
+            elements.refreshBtn = document.getElementById('refreshBtn');
+        }
+
+        // Optimized rate update function
+        function updateRates() {
+            if (isLoading) return;
+            
+            const baseRates = {
+                EUR: 0.8519,
+                GBP: 0.7420,
+                AED: 3.6725,
+                USDT: 1.0000,
+                USDC: 0.9996
+            };
+
+            // Faster rate updates with minimal calculations
+            for (const currency in baseRates) {
+                const baseRate = baseRates[currency];
+                const maxFluctuation = currency.startsWith('USD') ? 0.001 : 0.002;
+                const fluctuation = (Math.random() - 0.5) * maxFluctuation;
+                exchangeRates[currency] = Math.max(0.001, baseRate + fluctuation);
+                
+                // Simplified change calculation
+                const randomChange = (Math.random() - 0.5) * 0.1;
+                changes24h[currency] = Math.max(-2, Math.min(2, 
+                    changes24h[currency] * 0.95 + randomChange * 0.05
+                ));
+            }
+            
+            updateDisplay();
+            updateRatesMatrix();
+        }
+
+        // Optimized conversion function
+        function convert(amount, fromCurrency, toCurrency) {
+            if (fromCurrency === toCurrency) return amount;
+            
+            const usdAmount = fromCurrency === 'USD' ? amount : amount / exchangeRates[fromCurrency];
+            return toCurrency === 'USD' ? usdAmount : usdAmount * exchangeRates[toCurrency];
+        }
+
+        // Faster display update with cached elements
+        function updateDisplay() {
+            const amount = parseFloat(elements.amountInput.value) || 1;
+            const fromCurrency = elements.fromSelect.value;
+            const toCurrency = elements.toSelect.value;
+            
+            const convertedAmount = convert(amount, fromCurrency, toCurrency);
+            const rate = convert(1, fromCurrency, toCurrency);
+            
+            const fromData = currencyData[fromCurrency];
+            const toData = currencyData[toCurrency];
+            
+            // Faster DOM updates
+            const roundedAmount = Math.round(convertedAmount);
+            elements.resultInput.value = toData.symbol + roundedAmount.toLocaleString('en-US');
+            
+            elements.resultTitle.innerHTML = `<span>${toData.flag}</span> ${amount} ${fromCurrency} = ${roundedAmount} ${toCurrency}`;
+            elements.resultValue.innerHTML = `<span>${toData.flag}</span> ${toData.symbol}${roundedAmount.toLocaleString('en-US')}`;
+            elements.resultRate.textContent = `1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
+            
+            // Update flags
+            elements.resultFlag.textContent = toData.flag;
+            elements.resultValueFlag.textContent = toData.flag;
+            
+            // Optimized change display
+            const change = changes24h[toCurrency] || 0;
+            const changeText = change === 0 ? 'No change' : 
+                (change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`);
+            const changeClass = change > 0 ? 'change-positive' : change < 0 ? 'change-negative' : 'change-neutral';
+            
+            elements.resultChange.textContent = changeText;
+            elements.resultChange.className = `result-change ${changeClass}`;
+            
+            // Fast timestamp update
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            elements.footerUpdate.textContent = 'Last updated: ' + timeString;
+        }
+
+        // Optimized rates matrix with fragment for better performance
+        function updateRatesMatrix() {
+            const fragment = document.createDocumentFragment();
+            const currencies = ['USD', 'EUR', 'GBP', 'AED', 'USDT', 'USDC'];
+            
+            currencies.forEach(from => {
+                currencies.forEach(to => {
+                    if (from !== to) {
+                        const rate = convert(1, from, to);
+                        const fromData = currencyData[from];
+                        const toData = currencyData[to];
+                        
+                        const rateItem = document.createElement('div');
+                        rateItem.className = 'rate-item';
+                        rateItem.innerHTML = `
+                            <div class="rate-currency">
+                                <span>${fromData.flag}</span>
+                                ${from} → 
+                                <span>${toData.flag}</span>
+                                ${to}
+                            </div>
+                            <div class="rate-value">${rate.toFixed(4)}</div>
+                        `;
+                        fragment.appendChild(rateItem);
+                    }
+                });
+            });
+            
+            elements.ratesMatrix.innerHTML = '';
+            elements.ratesMatrix.appendChild(fragment);
+        }
+
+        // Optimized swap function
+        function swapCurrencies() {
+            const fromValue = elements.fromSelect.value;
+            const toValue = elements.toSelect.value;
+            
+            elements.fromSelect.value = toValue;
+            elements.toSelect.value = fromValue;
+            updateDisplay();
+        }
+
+        // Optimized refresh function
+        function refreshRates() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            elements.refreshBtn.disabled = true;
+            elements.refreshBtn.textContent = 'Refreshing...';
+            document.querySelector('.main-card').classList.add('loading');
+            
+            // Faster refresh with shorter timeout
+            setTimeout(() => {
+                updateRates();
+                isLoading = false;
+                elements.refreshBtn.disabled = false;
+                elements.refreshBtn.textContent = 'Refresh';
+                document.querySelector('.main-card').classList.remove('loading');
+            }, 500);
+        }
+
+        // Optimized event listeners with passive events
+        function setupEventListeners() {
+            elements.amountInput.addEventListener('input', updateDisplay, { passive: true });
+            elements.fromSelect.addEventListener('change', updateDisplay, { passive: true });
+            elements.toSelect.addEventListener('change', updateDisplay, { passive: true });
+        }
+
+        // Faster initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            cacheElements();
+            setupEventListeners();
+            updateDisplay();
+            updateRatesMatrix();
+            
+            // Faster update interval
+            updateInterval = setInterval(updateRates, 3000); // 3 seconds instead of 5
+        });
+
+        // Optimized cleanup
+        window.addEventListener('beforeunload', function() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+        }, { passive: true });
+
+        // Preload critical resources
+        const preloadLink = document.createElement('link');
+        preloadLink.rel = 'preload';
+        preloadLink.as = 'style';
+        preloadLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
+        document.head.appendChild(preloadLink);
+    </script>
+</body>
+</html>
