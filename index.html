@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maleks SWAP - Simple Currency Converter</title>
+    <title>Maleks SWAP - Currency Converter with Live Market Data</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💱</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -24,14 +24,28 @@
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 800px;
+        .page-container {
+            max-width: 1400px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+
+        .main-content {
+            min-width: 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
         }
 
         .header {
             text-align: center;
             margin-bottom: 40px;
+            grid-column: 1 / -1;
         }
 
         .header h1 {
@@ -54,6 +68,112 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
             margin-bottom: 24px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stock-item, .gold-item {
+            padding: 12px;
+            border-radius: 8px;
+            background: #f8fafc;
+            margin-bottom: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .stock-item:hover, .gold-item:hover {
+            background: #f1f5f9;
+            transform: translateX(2px);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .stock-symbol {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.875rem;
+        }
+
+        .stock-name {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .stock-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .stock-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .change-positive {
+            color: #16a34a;
+            background: #dcfce7;
+        }
+
+        .change-negative {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .gold-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #f59e0b;
+            margin-bottom: 8px;
+        }
+
+        .gold-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+
+        .gold-detail-item {
+            background: #fffbeb;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .gold-detail-label {
+            font-size: 0.75rem;
+            color: #92400e;
+            margin-bottom: 2px;
+        }
+
+        .gold-detail-value {
+            font-weight: 600;
+            color: #78350f;
         }
 
         .card-header {
@@ -107,88 +227,48 @@
         }
 
         .input-label {
-            font-weight: 500;
-            color: #374151;
             font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
         }
 
-        .amount-input {
-            padding: 12px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
+        .amount-input, .currency-select {
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
             font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.15s ease;
             background: white;
-            color: #1f2937;
-            transition: border-color 0.15s ease;
         }
 
-        .amount-input:focus {
+        .amount-input:focus, .currency-select:focus {
             outline: none;
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .currency-select {
-            padding: 12px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 1rem;
-            background: white;
-            color: #1f2937;
-            cursor: pointer;
-            transition: border-color 0.15s ease;
-        }
-
-        .currency-select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .currency-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 0;
-        }
-
-        .currency-flag {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            margin-right: 8px;
         }
 
         .swap-btn {
             background: #f1f5f9;
-            color: #64748b;
-            border: 1px solid #e2e8f0;
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-bottom: 8px;
         }
 
         .swap-btn:hover {
             background: #e2e8f0;
-            color: #475569;
             transform: rotate(180deg);
         }
 
         .result-section {
-            padding: 24px;
             background: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
             margin-bottom: 24px;
         }
 
@@ -200,59 +280,42 @@
         }
 
         .result-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .result-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .change-neutral {
+            color: #64748b;
+            background: #f1f5f9;
         }
 
         .result-value {
             font-size: 2rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #0f172a;
             margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .result-rate {
             font-size: 0.875rem;
-            color: #64748b;
-            margin-bottom: 8px;
-        }
-
-        .result-change {
-            font-size: 0.875rem;
-            font-weight: 500;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .change-positive {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .change-negative {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-
-        .change-neutral {
-            background: #f1f5f9;
             color: #64748b;
         }
 
         .rates-section {
             background: white;
             border-radius: 12px;
-            padding: 24px;
+            padding: 32px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
         }
 
         .rates-title {
@@ -264,72 +327,57 @@
 
         .rates-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 12px;
         }
 
         .rate-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            transition: background-color 0.15s ease;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.15s ease;
         }
 
         .rate-item:hover {
             background: #f1f5f9;
+            transform: translateY(-2px);
         }
 
-        .rate-currency {
-            font-size: 0.875rem;
-            color: #374151;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .rate-pair {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 4px;
         }
 
         .rate-value {
+            font-size: 1rem;
             font-weight: 600;
             color: #0f172a;
-            font-size: 0.875rem;
         }
 
         .footer {
-            text-align: center;
-            color: #64748b;
-            font-size: 0.875rem;
-            margin-top: 32px;
-            padding: 16px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 16px 0;
+            font-size: 0.875rem;
+            color: #64748b;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 12px;
         }
 
         .status-indicator {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 12px;
-            background: #dcfce7;
-            border: 1px solid #bbf7d0;
-            border-radius: 6px;
-            color: #166534;
-            font-weight: 500;
-            font-size: 0.875rem;
         }
 
         .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
+            width: 8px;
+            height: 8px;
             background: #22c55e;
-            animation: pulse 2s infinite;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
         }
 
         @keyframes pulse {
@@ -337,19 +385,19 @@
             50% { opacity: 0.5; }
         }
 
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
+        @media (max-width: 1024px) {
+            .page-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+            }
         }
 
-        /* Performance optimizations */
-        .currency-select option {
-            background: white;
-            color: #1f2937;
-            padding: 8px;
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             .converter-section {
                 grid-template-columns: 1fr;
@@ -357,27 +405,13 @@
             }
             
             .swap-btn {
-                justify-self: center;
-                margin: 8px 0;
+                transform: rotate(90deg);
             }
             
-            .card-header {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
+            .swap-btn:hover {
+                transform: rotate(270deg);
             }
             
-            .footer {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .rates-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
             body {
                 padding: 16px;
             }
@@ -393,98 +427,123 @@
             .result-value {
                 font-size: 1.5rem;
             }
-        }
 
-        /* Preload critical styles */
-        .preload {
-            visibility: hidden;
-            position: absolute;
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="page-container">
         <div class="header">
             <h1>💱 Maleks SWAP</h1>
-            <p>Fast cryptocurrency converter with real-time exchange rates</p>
+            <p>Fast cryptocurrency converter with live market data</p>
         </div>
 
-        <div class="main-card">
-            <div class="card-header">
-                <h2 class="card-title">Currency Converter</h2>
-                <button class="refresh-btn" onclick="refreshRates()" id="refreshBtn">
-                    Refresh
-                </button>
-            </div>
+        <div class="main-content">
+            <div class="main-card">
+                <div class="card-header">
+                    <h2 class="card-title">Currency Converter</h2>
+                    <button class="refresh-btn" onclick="refreshRates()" id="refreshBtn">
+                        Refresh
+                    </button>
+                </div>
 
-            <div class="converter-section">
-                <div class="input-group">
-                    <label class="input-label">Amount</label>
-                    <input type="number" class="amount-input" id="amountInput" placeholder="Enter amount" value="1" min="0" step="any">
-                    <label class="input-label">From</label>
-                    <select class="currency-select" id="fromSelect">
-                        <option value="USDT">🟢 USDT (Tether)</option>
-                        <option value="USDC">🔵 USDC (USD Coin)</option>
-                        <option value="USD">🇺🇸 USD (US Dollar)</option>
-                        <option value="EUR">🇪🇺 EUR (Euro)</option>
-                        <option value="GBP">🇬🇧 GBP (British Pound)</option>
-                        <option value="AED">🇦🇪 AED (UAE Dirham)</option>
-                    </select>
-                </div>
-                
-                <div class="input-group">
-                    <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇄</button>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Result</label>
-                    <input type="text" class="amount-input" id="resultInput" readonly>
-                    <label class="input-label">To</label>
-                    <select class="currency-select" id="toSelect">
-                        <option value="USD">🇺🇸 USD (US Dollar)</option>
-                        <option value="EUR">🇪🇺 EUR (Euro)</option>
-                        <option value="GBP">🇬🇧 GBP (British Pound)</option>
-                        <option value="AED">🇦🇪 AED (UAE Dirham)</option>
-                        <option value="USDT">🟢 USDT (Tether)</option>
-                        <option value="USDC">🔵 USDC (USD Coin)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="result-section">
-                <div class="result-header">
-                    <div class="result-title" id="resultTitle">
-                        <span id="resultFlag">🇺🇸</span>
-                        Conversion Result
+                <div class="converter-section">
+                    <div class="input-group">
+                        <label class="input-label">Amount</label>
+                        <input type="number" class="amount-input" id="amountInput" placeholder="Enter amount" value="1" min="0" step="any">
+                        <label class="input-label">From</label>
+                        <select class="currency-select" id="fromSelect">
+                            <option value="USDT">🟢 USDT (Tether)</option>
+                            <option value="USDC">🔵 USDC (USD Coin)</option>
+                            <option value="USD">🇺🇸 USD (US Dollar)</option>
+                            <option value="EUR">🇪🇺 EUR (Euro)</option>
+                            <option value="GBP">🇬🇧 GBP (British Pound)</option>
+                            <option value="AED">🇦🇪 AED (UAE Dirham)</option>
+                        </select>
                     </div>
-                    <div class="result-change change-neutral" id="resultChange">No change</div>
+
+                    <button class="swap-btn" onclick="swapCurrencies()">⇄</button>
+
+                    <div class="input-group">
+                        <label class="input-label">Result</label>
+                        <input type="text" class="amount-input" id="resultInput" readonly>
+                        <label class="input-label">To</label>
+                        <select class="currency-select" id="toSelect">
+                            <option value="USD">🇺🇸 USD (US Dollar)</option>
+                            <option value="EUR">🇪🇺 EUR (Euro)</option>
+                            <option value="GBP">🇬🇧 GBP (British Pound)</option>
+                            <option value="AED">🇦🇪 AED (UAE Dirham)</option>
+                            <option value="USDT">🟢 USDT (Tether)</option>
+                            <option value="USDC">🔵 USDC (USD Coin)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="result-value" id="resultValue">
-                    <span id="resultValueFlag">🇺🇸</span>
-                    $1
+
+                <div class="result-section">
+                    <div class="result-header">
+                        <div class="result-title" id="resultTitle">
+                            <span id="resultFlag">🇺🇸</span>
+                            Conversion Result
+                        </div>
+                        <div class="result-change change-neutral" id="resultChange">No change</div>
+                    </div>
+                    <div class="result-value" id="resultValue">
+                        <span id="resultValueFlag">🇺🇸</span>
+                        $1
+                    </div>
+                    <div class="result-rate" id="resultRate">1 USDT = 1.0000 USD</div>
                 </div>
-                <div class="result-rate" id="resultRate">1 USDT = 1.0000 USD</div>
+            </div>
+
+            <div class="rates-section">
+                <h3 class="rates-title">Exchange Rates</h3>
+                <div class="rates-grid" id="ratesMatrix">
+                    <!-- Rates matrix will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Live data - updates every 5 seconds</span>
+                </div>
+                <div id="footerUpdate">Last updated: Loading...</div>
             </div>
         </div>
 
-        <div class="rates-section">
-            <h3 class="rates-title">Exchange Rates</h3>
-            <div class="rates-grid" id="ratesMatrix">
-                <!-- Rates matrix will be populated by JavaScript -->
+        <div class="sidebar">
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">📈 Major Stocks</h3>
+                <div id="stocksList">
+                    <!-- Stocks will be populated by JavaScript -->
+                </div>
             </div>
-        </div>
 
-        <div class="footer">
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span>Live data - updates every 5 seconds</span>
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">🏆 Gold Price</h3>
+                <div class="gold-item">
+                    <div class="gold-price" id="goldPrice">$2,650.00</div>
+                    <div class="stock-change change-positive" id="goldChange">+0.5%</div>
+                    <div class="gold-details">
+                        <div class="gold-detail-item">
+                            <div class="gold-detail-label">Per Oz</div>
+                            <div class="gold-detail-value" id="goldPerOz">$2,650</div>
+                        </div>
+                        <div class="gold-detail-item">
+                            <div class="gold-detail-label">Per Gram</div>
+                            <div class="gold-detail-value" id="goldPerGram">$85.20</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="footerUpdate">Last updated: Loading...</div>
         </div>
     </div>
 
     <script>
-        // Optimized exchange rates with faster access
+        // Exchange rates
         const exchangeRates = {
             USD: 1.0000,
             EUR: 0.8519,
@@ -504,7 +563,7 @@
             USDC: 0.00
         };
 
-        // Enhanced currency metadata with flags and optimized data
+        // Currency metadata
         const currencyData = {
             USD: { name: 'US Dollar', symbol: '$', flag: '🇺🇸', color: '#22c55e' },
             EUR: { name: 'Euro', symbol: '€', flag: '🇪🇺', color: '#3b82f6' },
@@ -514,7 +573,22 @@
             USDC: { name: 'USD Coin', symbol: '$', flag: '🔵', color: '#0ea5e9' }
         };
 
-        // Cached DOM elements for better performance
+        // Stock data
+        const stockData = {
+            AAPL: { name: 'Apple Inc.', price: 189.50, change: 1.25 },
+            GOOGL: { name: 'Alphabet Inc.', price: 142.30, change: -0.45 },
+            MSFT: { name: 'Microsoft Corp.', price: 378.90, change: 0.85 },
+            TSLA: { name: 'Tesla Inc.', price: 242.15, change: 2.10 },
+            AMZN: { name: 'Amazon.com Inc.', price: 178.25, change: -0.30 }
+        };
+
+        // Gold data
+        let goldData = {
+            pricePerOz: 2650.00,
+            change: 0.5
+        };
+
+        // Cached DOM elements
         const elements = {
             amountInput: null,
             fromSelect: null,
@@ -528,13 +602,18 @@
             resultValueFlag: null,
             ratesMatrix: null,
             footerUpdate: null,
-            refreshBtn: null
+            refreshBtn: null,
+            stocksList: null,
+            goldPrice: null,
+            goldChange: null,
+            goldPerOz: null,
+            goldPerGram: null
         };
 
         let updateInterval;
         let isLoading = false;
 
-        // Cache DOM elements on load for better performance
+        // Cache DOM elements
         function cacheElements() {
             elements.amountInput = document.getElementById('amountInput');
             elements.fromSelect = document.getElementById('fromSelect');
@@ -549,9 +628,14 @@
             elements.ratesMatrix = document.getElementById('ratesMatrix');
             elements.footerUpdate = document.getElementById('footerUpdate');
             elements.refreshBtn = document.getElementById('refreshBtn');
+            elements.stocksList = document.getElementById('stocksList');
+            elements.goldPrice = document.getElementById('goldPrice');
+            elements.goldChange = document.getElementById('goldChange');
+            elements.goldPerOz = document.getElementById('goldPerOz');
+            elements.goldPerGram = document.getElementById('goldPerGram');
         }
 
-        // Optimized rate update function
+        // Update rates
         function updateRates() {
             if (isLoading) return;
             
@@ -563,14 +647,12 @@
                 USDC: 0.9996
             };
 
-            // Faster rate updates with minimal calculations
             for (const currency in baseRates) {
                 const baseRate = baseRates[currency];
                 const maxFluctuation = currency.startsWith('USD') ? 0.001 : 0.002;
                 const fluctuation = (Math.random() - 0.5) * maxFluctuation;
                 exchangeRates[currency] = Math.max(0.001, baseRate + fluctuation);
                 
-                // Simplified change calculation
                 const randomChange = (Math.random() - 0.5) * 0.1;
                 changes24h[currency] = Math.max(-2, Math.min(2, 
                     changes24h[currency] * 0.95 + randomChange * 0.05
@@ -579,9 +661,60 @@
             
             updateDisplay();
             updateRatesMatrix();
+            updateStocks();
+            updateGold();
         }
 
-        // Optimized conversion function
+        // Update stocks
+        function updateStocks() {
+            const stocks = Object.keys(stockData);
+            stocks.forEach(symbol => {
+                const fluctuation = (Math.random() - 0.5) * 2;
+                stockData[symbol].change = Math.max(-5, Math.min(5,
+                    stockData[symbol].change * 0.95 + fluctuation * 0.05
+                ));
+                stockData[symbol].price *= (1 + stockData[symbol].change / 100 * 0.01);
+            });
+
+            const html = stocks.map(symbol => {
+                const stock = stockData[symbol];
+                const changeClass = stock.change >= 0 ? 'change-positive' : 'change-negative';
+                const changeSymbol = stock.change >= 0 ? '+' : '';
+                return `
+                    <div class="stock-item">
+                        <div class="stock-header">
+                            <span class="stock-symbol">${symbol}</span>
+                            <span class="stock-change ${changeClass}">${changeSymbol}${stock.change.toFixed(2)}%</span>
+                        </div>
+                        <div class="stock-name">${stock.name}</div>
+                        <div class="stock-price">$${stock.price.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            elements.stocksList.innerHTML = html;
+        }
+
+        // Update gold
+        function updateGold() {
+            const fluctuation = (Math.random() - 0.5) * 0.5;
+            goldData.change = Math.max(-2, Math.min(2,
+                goldData.change * 0.95 + fluctuation * 0.05
+            ));
+            goldData.pricePerOz *= (1 + goldData.change / 100 * 0.01);
+
+            const pricePerGram = goldData.pricePerOz / 31.1035;
+            const changeClass = goldData.change >= 0 ? 'change-positive' : 'change-negative';
+            const changeSymbol = goldData.change >= 0 ? '+' : '';
+
+            elements.goldPrice.textContent = `$${goldData.pricePerOz.toFixed(2)}`;
+            elements.goldChange.textContent = `${changeSymbol}${goldData.change.toFixed(2)}%`;
+            elements.goldChange.className = `stock-change ${changeClass}`;
+            elements.goldPerOz.textContent = `$${Math.round(goldData.pricePerOz)}`;
+            elements.goldPerGram.textContent = `$${pricePerGram.toFixed(2)}`;
+        }
+
+        // Convert currency
         function convert(amount, fromCurrency, toCurrency) {
             if (fromCurrency === toCurrency) return amount;
             
@@ -589,7 +722,7 @@
             return toCurrency === 'USD' ? usdAmount : usdAmount * exchangeRates[toCurrency];
         }
 
-        // Faster display update with cached elements
+        // Update display
         function updateDisplay() {
             const amount = parseFloat(elements.amountInput.value) || 1;
             const fromCurrency = elements.fromSelect.value;
@@ -601,7 +734,6 @@
             const fromData = currencyData[fromCurrency];
             const toData = currencyData[toCurrency];
             
-            // Faster DOM updates
             const roundedAmount = Math.round(convertedAmount);
             elements.resultInput.value = toData.symbol + roundedAmount.toLocaleString('en-US');
             
@@ -609,11 +741,9 @@
             elements.resultValue.innerHTML = `<span>${toData.flag}</span> ${toData.symbol}${roundedAmount.toLocaleString('en-US')}`;
             elements.resultRate.textContent = `1 ${fromCurrency} = ${rate.toFixed(4)} ${toCurrency}`;
             
-            // Update flags
             elements.resultFlag.textContent = toData.flag;
             elements.resultValueFlag.textContent = toData.flag;
             
-            // Optimized change display
             const change = changes24h[toCurrency] || 0;
             const changeText = change === 0 ? 'No change' : 
                 (change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`);
@@ -622,7 +752,6 @@
             elements.resultChange.textContent = changeText;
             elements.resultChange.className = `result-change ${changeClass}`;
             
-            // Fast timestamp update
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-US', {
                 hour12: true,
@@ -633,7 +762,7 @@
             elements.footerUpdate.textContent = 'Last updated: ' + timeString;
         }
 
-        // Optimized rates matrix with fragment for better performance
+        // Update rates matrix
         function updateRatesMatrix() {
             const fragment = document.createDocumentFragment();
             const currencies = ['USD', 'EUR', 'GBP', 'AED', 'USDT', 'USDC'];
@@ -648,12 +777,7 @@
                         const rateItem = document.createElement('div');
                         rateItem.className = 'rate-item';
                         rateItem.innerHTML = `
-                            <div class="rate-currency">
-                                <span>${fromData.flag}</span>
-                                ${from} → 
-                                <span>${toData.flag}</span>
-                                ${to}
-                            </div>
+                            <div class="rate-pair">${fromData.flag} ${from} → ${toData.flag} ${to}</div>
                             <div class="rate-value">${rate.toFixed(4)}</div>
                         `;
                         fragment.appendChild(rateItem);
@@ -665,17 +789,15 @@
             elements.ratesMatrix.appendChild(fragment);
         }
 
-        // Optimized swap function
+        // Swap currencies
         function swapCurrencies() {
-            const fromValue = elements.fromSelect.value;
-            const toValue = elements.toSelect.value;
-            
-            elements.fromSelect.value = toValue;
-            elements.toSelect.value = fromValue;
+            const temp = elements.fromSelect.value;
+            elements.fromSelect.value = elements.toSelect.value;
+            elements.toSelect.value = temp;
             updateDisplay();
         }
 
-        // Optimized refresh function
+        // Refresh rates
         function refreshRates() {
             if (isLoading) return;
             
@@ -684,7 +806,6 @@
             elements.refreshBtn.textContent = 'Refreshing...';
             document.querySelector('.main-card').classList.add('loading');
             
-            // Faster refresh with shorter timeout
             setTimeout(() => {
                 updateRates();
                 isLoading = false;
@@ -694,37 +815,33 @@
             }, 500);
         }
 
-        // Optimized event listeners with passive events
+        // Setup event listeners
         function setupEventListeners() {
             elements.amountInput.addEventListener('input', updateDisplay, { passive: true });
             elements.fromSelect.addEventListener('change', updateDisplay, { passive: true });
             elements.toSelect.addEventListener('change', updateDisplay, { passive: true });
         }
 
-        // Faster initialization
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             cacheElements();
             setupEventListeners();
             updateDisplay();
             updateRatesMatrix();
+            updateStocks();
+            updateGold();
             
             // Set update interval to 5 seconds
             updateInterval = setInterval(updateRates, 5000);
         });
 
-        // Optimized cleanup
+        // Cleanup
         window.addEventListener('beforeunload', function() {
             if (updateInterval) {
                 clearInterval(updateInterval);
             }
         }, { passive: true });
-
-        // Preload critical resources
-        const preloadLink = document.createElement('link');
-        preloadLink.rel = 'preload';
-        preloadLink.as = 'style';
-        preloadLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
-        document.head.appendChild(preloadLink);
     </script>
 </body>
 </html>
+

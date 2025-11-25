@@ -23,5 +23,14 @@
 ## Rate Accuracy Issues
 - [x] Research current accurate USDT to GBP rate
 - [x] Fix USDT to GBP exchange rate
-- [ ] Update and deploy corrected rates
+- [x] Update and deploy corrected rates
+
+
+
+## New Features
+- [x] Add live stocks ticker sidebar (major stocks: AAPL, GOOGL, MSFT, TSLA, AMZN)
+- [x] Add live gold price display
+- [x] Design responsive sidebar layout
+- [x] Implement real-time price updates
+- [ ] Deploy enhanced converter
 
