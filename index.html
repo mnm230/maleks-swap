@@ -396,40 +396,171 @@
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
                 gap: 16px;
             }
+
+            .header h1 {
+                font-size: 2.25rem;
+            }
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                margin-bottom: 24px;
+            }
+            
+            .header h1 {
+                font-size: 1.875rem;
+            }
+
+            .header p {
+                font-size: 0.875rem;
+            }
+
+            .main-card, .rates-section, .sidebar-card {
+                padding: 20px;
+                border-radius: 16px;
+            }
+
             .converter-section {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 20px;
             }
             
             .swap-btn {
                 transform: rotate(90deg);
+                padding: 16px;
+                font-size: 1.5rem;
+                min-height: 56px;
+                min-width: 56px;
             }
             
             .swap-btn:hover {
                 transform: rotate(270deg);
             }
-            
-            body {
+
+            .amount-input, .currency-select {
                 padding: 16px;
+                font-size: 1.125rem;
+                min-height: 56px;
             }
-            
-            .header h1 {
-                font-size: 2rem;
+
+            .refresh-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+                min-height: 48px;
             }
-            
-            .main-card, .rates-section {
+
+            .card-title {
+                font-size: 1.25rem;
+            }
+
+            .result-section {
                 padding: 20px;
+                border-radius: 12px;
             }
             
             .result-value {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
+            }
+
+            .result-rate {
+                font-size: 1rem;
+            }
+
+            .rates-title {
+                font-size: 1.125rem;
+            }
+
+            .rates-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .rate-item {
+                padding: 14px;
             }
 
             .sidebar {
                 grid-template-columns: 1fr;
+            }
+
+            .sidebar-title {
+                font-size: 1.125rem;
+            }
+
+            .stock-item, .gold-item {
+                padding: 14px;
+            }
+
+            .stock-price {
+                font-size: 1.25rem;
+            }
+
+            .gold-price {
+                font-size: 1.75rem;
+            }
+
+            .footer {
+                font-size: 0.8125rem;
+                padding: 12px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 0.8125rem;
+            }
+
+            .main-card, .rates-section, .sidebar-card {
+                padding: 16px;
+            }
+
+            .card-header {
+                margin-bottom: 20px;
+            }
+
+            .converter-section {
+                gap: 16px;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+
+            .rates-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .rate-item {
+                padding: 12px;
+            }
+
+            .rate-pair {
+                font-size: 0.6875rem;
+            }
+
+            .rate-value {
+                font-size: 0.9375rem;
+            }
+
+            .stock-item, .gold-item {
+                padding: 12px;
+            }
+
+            .gold-details {
+                gap: 6px;
             }
         }
     </style>
