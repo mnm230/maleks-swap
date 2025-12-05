@@ -1,10 +1,11 @@
 # Maleks SWAP - Project TODO
 
-## Add PHP Currency
-- [x] Research current USD to PHP exchange rate (1 USD = 59.01 PHP)
-- [x] Add PHP to currency metadata
-- [x] Add PHP to exchange rates object
-- [x] Add PHP to dropdown menus
-- [x] Update exchange rate matrix (auto-calculated)
-- [ ] Test PHP conversions
-- [ ] Deploy with PHP support
+## Implement Live Exchange Rates
+- [x] Research free currency exchange rate APIs (no API key required)
+- [x] Find APIs that support crypto (USDT, USDC) and fiat (USD, EUR, GBP, AED, PHP)
+- [x] Test API endpoints and response formats (CoinGecko API chosen)
+- [x] Implement API integration in JavaScript (CoinGecko API)
+- [x] Add error handling and fallback mechanisms
+- [x] Update rates every 1 minute from live API
+- [ ] Test live rate updates
+- [ ] Deploy with live API integration

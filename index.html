@@ -641,7 +641,7 @@
             <div class="footer">
                 <div class="status-indicator">
                     <div class="status-dot"></div>
-                    <span>Live data - updates every 5 seconds</span>
+                    <span>Live data - updates every minute</span>
                 </div>
                 <div id="footerUpdate">Last updated: Loading...</div>
             </div>
@@ -771,28 +771,56 @@
             elements.goldPerGram = document.getElementById('goldPerGram');
         }
 
-        // Update rates
-        function updateRates() {
+        // Update rates from live API
+        async function updateRates() {
             if (isLoading) return;
             
-            const baseRates = {
-                EUR: 0.8519,
-                GBP: 0.7635,
-                AED: 3.6725,
-                USDT: 1.0000,
-                USDC: 0.9996
-            };
-
-            for (const currency in baseRates) {
-                const baseRate = baseRates[currency];
-                const maxFluctuation = currency.startsWith('USD') ? 0.001 : 0.002;
-                const fluctuation = (Math.random() - 0.5) * maxFluctuation;
-                exchangeRates[currency] = Math.max(0.001, baseRate + fluctuation);
+            try {
+                // Fetch live crypto rates from CoinGecko API
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd,eur,gbp,aed,php&include_24hr_change=true');
                 
-                const randomChange = (Math.random() - 0.5) * 0.1;
-                changes24h[currency] = Math.max(-2, Math.min(2, 
-                    changes24h[currency] * 0.95 + randomChange * 0.05
-                ));
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+                
+                const data = await response.json();
+                
+                // Update USDT rates
+                if (data.tether) {
+                    exchangeRates.EUR = data.tether.eur || 0.8519;
+                    exchangeRates.GBP = data.tether.gbp || 0.7635;
+                    exchangeRates.AED = data.tether.aed || 3.6725;
+                    exchangeRates.PHP = data.tether.php || 59.01;
+                    exchangeRates.USDT = 1.0000;
+                    
+                    // Update 24h changes if available
+                    if (data.tether.usd_24h_change !== undefined) {
+                        changes24h.USDT = data.tether.usd_24h_change;
+                    }
+                }
+                
+                // Update USDC rates
+                if (data['usd-coin']) {
+                    exchangeRates.USDC = data['usd-coin'].usd || 0.9996;
+                    
+                    if (data['usd-coin'].usd_24h_change !== undefined) {
+                        changes24h.USDC = data['usd-coin'].usd_24h_change;
+                    }
+                }
+                
+                // Calculate 24h changes for fiat currencies based on USDT
+                if (data.tether) {
+                    changes24h.EUR = data.tether.eur_24h_change || 0;
+                    changes24h.GBP = data.tether.gbp_24h_change || 0;
+                    changes24h.AED = data.tether.aed_24h_change || 0;
+                    changes24h.PHP = data.tether.php_24h_change || 0;
+                }
+                
+                console.log('Live rates updated:', exchangeRates);
+                
+            } catch (error) {
+                console.error('Failed to fetch live rates:', error);
+                // Fallback to last known rates (already in exchangeRates)
             }
             
             updateDisplay();
@@ -967,8 +995,8 @@
             updateStocks();
             updateGold();
             
-            // Set update interval to 5 seconds
-            updateInterval = setInterval(updateRates, 5000);
+            // Set update interval to 60 seconds (1 minute) for live API
+            updateInterval = setInterval(updateRates, 60000);
         });
 
         // Cleanup
