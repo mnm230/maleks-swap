@@ -1,11 +1,9 @@
 # Maleks SWAP - Project TODO
 
-## Implement Live Exchange Rates
-- [x] Research free currency exchange rate APIs (no API key required)
-- [x] Find APIs that support crypto (USDT, USDC) and fiat (USD, EUR, GBP, AED, PHP)
-- [x] Test API endpoints and response formats (CoinGecko API chosen)
-- [x] Implement API integration in JavaScript (CoinGecko API)
-- [x] Add error handling and fallback mechanisms
-- [x] Update rates every 1 minute from live API
-- [ ] Test live rate updates
-- [ ] Deploy with live API integration
+## Fix USD to GBP Exchange Rate
+- [x] Research current accurate USD to GBP exchange rate (0.7485 GBP per XE.com)
+- [x] Check what rate the converter is currently displaying (0.7635 - incorrect)
+- [x] Identify why the rate is incorrect (initial exchangeRates object had old hardcoded value)
+- [x] Fix the rate calculation or API data mapping (updated initial rates to match current market)
+- [ ] Test the corrected rate
+- [ ] Deploy the fix
