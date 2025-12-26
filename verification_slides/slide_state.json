@@ -1,0 +1,60 @@
+{
+  "project_info": {
+    "title": "Executive Summary: System Integrity Confirmed",
+    "created": 1766747396.4988713,
+    "last_updated": 1766747505.6996827,
+    "total_slides": 6
+  },
+  "slides": {
+    "executive_summary": "edited",
+    "methodology": "edited",
+    "usdt_gbp_results": "edit_pending",
+    "gbp_usd_results": "edit_pending",
+    "api_performance": "edit_pending",
+    "conclusion": "edit_pending"
+  },
+  "outline": [
+    {
+      "id": "executive_summary",
+      "title": "Executive Summary: System Integrity Confirmed",
+      "summary": "Overview of the verification audit confirming 100% accuracy of exchange rates and system reliability.",
+      "image_plan": "/home/ubuntu/upload/search_images/oHYuGm4CmhsG.png - The title slide is about an exchange rate verification report. Image 7 shows currency exchange (Dollar and Euro) with arrows, which is a good visual metaphor for the report's topic.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "methodology",
+      "title": "Verification Methodology",
+      "summary": "Details the testing protocol using XE.com and CoinGecko as benchmarks against the live converter.",
+      "image_plan": "/home/ubuntu/upload/search_images/rLijJxhA067l.png - This slide is the Executive Summary confirming system integrity and accuracy. Image 4, a calculator with coins, visually represents calculation, verification, and financial results.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "usdt_gbp_results",
+      "title": "USDT to GBP Verification Results",
+      "summary": "Analysis of USDT/GBP rate accuracy showing negligible variance and confirming the 1:1 USD peg.",
+      "image_plan": "/home/ubuntu/upload/search_images/O2hOSchumiJ3.png - This slide details the verification methodology, which involves calculations and financial data. Image 5, a calculator with a dollar sign, is a simple and relevant icon for the methodology section.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "gbp_usd_results",
+      "title": "GBP to USD Verification Results",
+      "summary": "Verification of GBP/USD rate showing high precision and alignment with institutional market rates.",
+      "image_plan": "/home/ubuntu/upload/search_images/ZaC5cr2NBevc.jpg - This slide focuses on the USDT to GBP verification. Images 1, 2, and 3 all feature USDT/USDC. Image 1 is the most visually clean and directly represents the crypto assets being verified (USDT and USDC).",
+      "slide_template_key": ""
+    },
+    {
+      "id": "api_performance",
+      "title": "Live API Performance Status",
+      "summary": "Report on the CoinGecko API integration, update frequency, and system reliability.",
+      "image_plan": "/home/ubuntu/upload/search_images/XkPgktQQVhKm.png - This slide focuses on the GBP to USD verification, which is a fiat-to-fiat exchange. Image 8 shows a currency exchange (Yen and Dollar) with arrows, which is a clear visual for the currency conversion process.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "conclusion",
+      "title": "Conclusion and Next Steps",
+      "summary": "Final assessment of system health and recommendations for continued operation.",
+      "image_plan": "/home/ubuntu/upload/search_images/RobcDbp9mZKw.png - This is the conclusion slide, summarizing the system's \"GREEN / HEALTHY\" status and recommending proceeding with the deployment. Image 6, a money bag and a calculator, represents the successful financial verification and readiness for production.",
+      "slide_template_key": ""
+    }
+  ]
+}

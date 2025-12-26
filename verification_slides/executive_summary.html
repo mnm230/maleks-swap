@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Summary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            grid-template-rows: 120px 1fr 80px;
+        }
+
+        /* Header Area */
+        .header {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            padding: 40px 60px;
+            border-bottom: 4px solid #000000;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .page-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: #000000;
+            line-height: 0.8;
+        }
+        .report-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #333333;
+        }
+
+        /* Sidebar / Title Area */
+        .sidebar {
+            grid-column: 1;
+            grid-row: 2;
+            padding: 60px 60px 60px 60px; /* keep upper padding consistent */
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 56px;
+            line-height: 1.1;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 40px;
+        }
+        .accent-bar {
+            width: 80px;
+            height: 8px;
+            background: #0055FF;
+            margin-bottom: 20px; /* do not change upper spacing of title */
+        }
+
+        /* Content Area */
+        .content {
+            grid-column: 2;
+            grid-row: 2;
+            padding: 40px; /* reduced from 60px (top+bottom save 40px) */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 24px; /* reduced from 40px (save 16px between rows) */
+        }
+
+        .metric-card {
+            border: 2px solid #000000;
+            padding: 22px; /* reduced from 30px (save 16px per card) */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .metric-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            color: #0055FF;
+        }
+        .metric-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin-top: 8px; /* reduced from 10px */
+        }
+        .metric-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #333333;
+            margin-top: 6px; /* reduced from 10px */
+            line-height: 1.4;
+        }
+
+        .status-card {
+            background: #000000;
+            color: #FFFFFF;
+            padding: 22px; /* reduced from 30px */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .status-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 6px; /* reduced from 10px */
+        }
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #0055FF;
+            background: #FFFFFF;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #0055FF;
+            border-radius: 50%;
+        }
+
+        /* Footer */
+        .footer {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            background: #FFFFFF;
+            border-top: 1px solid #E0E0E0;
+            padding: 0 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .footer-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #666666;
+        }
+        .img-container {
+            position: absolute;
+            bottom: 90px; /* slightly raised to avoid overlap risk */
+            left: 60px;
+            width: 300px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .img-container img {
+            width: 100%;
+            filter: grayscale(100%);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="header">
+            <div class="page-number">01</div>
+            <div class="report-title">Maleks SWAP Verification Report</div>
+        </div>
+
+        <div class="sidebar">
+            <div class="accent-bar"></div>
+            <h1>SYSTEM INTEGRITY CONFIRMED</h1>
+            <p style="font-family: 'Inter', sans-serif; font-size: 18px; line-height: 1.5; color: #333333;">
+                Comprehensive audit of Maleks SWAP exchange rates completed on December 7, 2025.
+            </p>
+            <div class="img-container">
+                <img src="/home/ubuntu/upload/search_images/oHYuGm4CmhsG.png" alt="Exchange Rate Concept">
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="metric-card">
+                <div class="metric-value">100%</div>
+                <div class="metric-label">Accuracy Rate</div>
+                <div class="metric-desc">All tested currency pairs fall within acceptable market variance (<0.1%).</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-value">60s</div>
+                <div class="metric-label">Update Interval</div>
+                <div class="metric-desc">Live API integration with CoinGecko updates every minute.</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-value"><i class="fas fa-check-circle"></i></div>
+                <div class="metric-label">Institutional Grade</div>
+                <div class="metric-desc">Cross-reference with XE.com confirms high-precision fiat conversions.</div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-label">SYSTEM STATUS</div>
+                <div class="status-indicator">
+                    <div class="dot"></div>
+                    RELIABLE & READY
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">Confidential Internal Review</div>
+            <div class="footer-text">Generated by Manus</div>
+        </div>
+    </div>
+</body>
+</html>
