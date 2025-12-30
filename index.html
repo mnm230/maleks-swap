@@ -435,10 +435,19 @@
                 font-size: 1.5rem;
                 min-height: 56px;
                 min-width: 56px;
+                margin: 0 auto; /* Center the button */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10; /* Ensure it's clickable */
             }
             
             .swap-btn:hover {
                 transform: rotate(270deg);
+            }
+            
+            .swap-btn:active {
+                transform: rotate(270deg) scale(0.95); /* Add active state feedback */
             }
 
             .amount-input, .currency-select {
