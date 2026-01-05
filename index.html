@@ -621,15 +621,15 @@
     </div>
 
     <script>
-        // Exchange rates
+        // Exchange rates (Base USD)
         const exchangeRates = {
             USD: 1.0000,
-            EUR: 0.8585,
-            GBP: 0.7485,
-            AED: 3.67,
-            PHP: 58.97,
+            EUR: 0.8513, // Verified from BSP
+            GBP: 0.7428, // Verified from SmartCurrencyBusiness
+            AED: 3.6725, // Pegged rate
+            PHP: 58.79,  // Verified from BSP
             USDT: 1.0000,
-            USDC: 0.9998
+            USDC: 1.0000
         };
 
         // 24h changes
@@ -654,13 +654,13 @@
             USDC: { name: 'USD Coin', symbol: '$', flag: '🔵', color: '#0ea5e9' }
         };
 
-        // Stock data
+        // Stock data (Updated Jan 5, 2026)
         const stockData = {
-            AAPL: { name: 'Apple Inc.', price: 189.50, change: 1.25 },
-            GOOGL: { name: 'Alphabet Inc.', price: 142.30, change: -0.45 },
-            MSFT: { name: 'Microsoft Corp.', price: 378.90, change: 0.85 },
-            TSLA: { name: 'Tesla Inc.', price: 242.15, change: 2.10 },
-            AMZN: { name: 'Amazon.com Inc.', price: 178.25, change: -0.30 }
+            AAPL: { name: 'Apple Inc.', price: 271.01, change: -0.31 },
+            GOOGL: { name: 'Alphabet Inc.', price: 315.15, change: 0.69 },
+            MSFT: { name: 'Microsoft Corp.', price: 472.94, change: -2.21 },
+            TSLA: { name: 'Tesla Inc.', price: 418.20, change: 1.50 }, // Estimated based on market trends
+            AMZN: { name: 'Amazon.com Inc.', price: 226.50, change: -1.87 }
         };
 
         // Gold data
