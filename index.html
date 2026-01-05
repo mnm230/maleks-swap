@@ -659,7 +659,7 @@
             AAPL: { name: 'Apple Inc.', price: 271.01, change: -0.31 },
             GOOGL: { name: 'Alphabet Inc.', price: 315.15, change: 0.69 },
             MSFT: { name: 'Microsoft Corp.', price: 472.94, change: -2.21 },
-            TSLA: { name: 'Tesla Inc.', price: 418.20, change: 1.50 }, // Estimated based on market trends
+            TSLA: { name: 'Tesla Inc.', price: 418.20, change: 1.50 },
             AMZN: { name: 'Amazon.com Inc.', price: 226.50, change: -1.87 }
         };
 
@@ -912,13 +912,10 @@
                     changes24h.USDC = data['usd-coin'].usd_24h_change;
                 }
                 
-                // Simulate stock/gold fluctuations for liveliness
-                simulateFluctuations();
-                
                 // Update UI
                 updateRatesMatrix();
-                updateStocks();
-                updateGold();
+                // updateStocks(); // Static data, no need to re-render constantly
+                // updateGold();   // Static data, no need to re-render constantly
                 calculateConversion();
                 
                 // Update timestamp
@@ -929,8 +926,6 @@
                 
             } catch (error) {
                 console.error('Failed to fetch rates:', error);
-                // Fallback to simulation if API fails
-                simulateFluctuations();
                 updateRatesMatrix();
                 calculateConversion();
             } finally {
@@ -942,21 +937,7 @@
             }
         }
 
-        // Simulate small fluctuations for non-API data
-        function simulateFluctuations() {
-            // Fluctuate stocks
-            Object.keys(stockData).forEach(key => {
-                const volatility = 0.002; // 0.2% volatility
-                const change = 1 + (Math.random() * volatility * 2 - volatility);
-                stockData[key].price *= change;
-                stockData[key].change += (Math.random() * 0.1 - 0.05);
-            });
-            
-            // Fluctuate gold
-            const goldVol = 0.001;
-            goldData.pricePerOz *= (1 + (Math.random() * goldVol * 2 - goldVol));
-            goldData.change += (Math.random() * 0.05 - 0.025);
-        }
+
 
         // Refresh button handler
         function refreshRates() {
