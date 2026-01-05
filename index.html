@@ -886,20 +886,29 @@
                 // Update USDT rates
                 if (data.tether) {
                     exchangeRates.USDT = 1.0000; // Base
-                    exchangeRates.USD = 1 / data.tether.usd;
-                    exchangeRates.EUR = (1 / data.tether.usd) * data.tether.eur;
-                    exchangeRates.GBP = (1 / data.tether.usd) * data.tether.gbp;
-                    exchangeRates.AED = (1 / data.tether.usd) * data.tether.aed;
-                    exchangeRates.PHP = (1 / data.tether.usd) * data.tether.php;
+                    // API returns price of 1 USDT in other currencies
+                    // So if 1 USDT = 0.9995 USD, then exchangeRates.USD should be 0.9995
+                    // But our logic uses rates relative to USD where USD = 1
+                    // Let's normalize everything to USD = 1
+                    
+                    const usdtInUsd = data.tether.usd;
+                    
+                    exchangeRates.USDT = 1 / usdtInUsd; // 1 USD = ? USDT
+                    exchangeRates.USD = 1.0000;
+                    exchangeRates.EUR = data.tether.eur / usdtInUsd; // 1 USD = ? EUR
+                    exchangeRates.GBP = data.tether.gbp / usdtInUsd;
+                    exchangeRates.AED = data.tether.aed / usdtInUsd;
+                    exchangeRates.PHP = data.tether.php / usdtInUsd;
                     
                     // Update 24h changes
                     changes24h.USDT = data.tether.usd_24h_change;
-                    changes24h.USD = 0; // Relative base
+                    changes24h.USD = 0; 
                 }
                 
                 // Update USDC rates
                 if (data['usd-coin']) {
-                    exchangeRates.USDC = exchangeRates.USD * data['usd-coin'].usd;
+                    // API returns price of 1 USDC in USD
+                    exchangeRates.USDC = 1 / data['usd-coin'].usd; // 1 USD = ? USDC
                     changes24h.USDC = data['usd-coin'].usd_24h_change;
                 }
                 
