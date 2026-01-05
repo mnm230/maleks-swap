@@ -150,8 +150,8 @@
 
         .stock-price {
             font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
+            font-weight: 800;
+            color: black;
             font-feature-settings: "tnum";
         }
 
@@ -163,23 +163,25 @@
         }
 
         .change-positive {
-            color: #4ade80;
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.2);
+            color: black;
+            background: var(--success);
+            border: 2px solid black;
+            font-weight: 800;
         }
 
         .change-negative {
-            color: #f87171;
-            background: rgba(248, 113, 113, 0.1);
-            border: 1px solid rgba(248, 113, 113, 0.2);
+            color: white;
+            background: var(--danger);
+            border: 2px solid black;
+            font-weight: 800;
         }
 
         .gold-price {
-            font-size: 1.75rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: black;
+            -webkit-text-fill-color: initial;
+            background: none;
             margin-bottom: 12px;
         }
 
@@ -191,11 +193,12 @@
         }
 
         .gold-detail-item {
-            background: rgba(251, 191, 36, 0.05);
+            background: #ffffff;
             padding: 12px;
-            border-radius: 12px;
+            border-radius: 8px;
             text-align: center;
-            border: 1px solid rgba(251, 191, 36, 0.1);
+            border: 2px solid black;
+            box-shadow: 2px 2px 0px black;
         }
 
         .gold-detail-label {
