@@ -713,16 +713,25 @@
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .tab-content.active {
             display: block;
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideUpFade {
+            0% { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.98); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
         }
 
         .app-card {
@@ -742,25 +751,31 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 16px;
+                padding: 12px;
+            }
+
+            .page-container {
+                margin-top: 50px; /* More space for ticker on mobile */
             }
 
             .glass-card {
-                padding: 24px;
+                padding: 20px;
                 border-radius: 20px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             }
 
             .converter-section {
                 display: flex;
                 flex-direction: column;
-                gap: 24px;
+                gap: 16px;
             }
             
             .swap-btn {
                 transform: rotate(90deg);
-                margin: 0 auto;
+                margin: -10px auto; /* Pull closer to inputs */
                 z-index: 10;
+                width: 48px;
+                height: 48px;
             }
             
             .swap-btn:hover {
@@ -774,21 +789,47 @@
             .amount-input, .currency-select {
                 padding: 16px;
                 font-size: 1.1rem;
+                border-radius: 16px;
             }
             
             .header h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
+                margin-bottom: 8px;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .tabs-container {
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                justify-content: flex-start; /* Allow scrolling if needed */
+            }
+
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                white-space: nowrap;
             }
 
             .insights-table th, .insights-table td {
-                padding: 8px;
-                font-size: 0.85rem;
-            }
-        }ize: 1.125rem;
-                min-height: 56px;
+                padding: 8px 4px;
+                font-size: 0.8rem;
             }
 
-            .result-value {
+            .ticker-wrap {
+                height: 36px;
+            }
+
+            .ticker-item {
+                font-size: 0.8rem;
+                padding: 0 16px;
+            }
+        }
+
+        .result-value {
                 font-size: 2.25rem;
             }
 

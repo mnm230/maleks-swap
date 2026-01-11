@@ -109,4 +109,12 @@
 - [x] Implement dark mode CSS overrides for new Candy Pop elements
 - [x] Add JavaScript logic for theme toggling and persistence
 - [x] Ensure dark mode compatibility with tabbed interface and ticker
-- [ ] Deploy dark mode fix to GitHub Pages
+- [x] Deploy dark mode fix to GitHub Pages
+
+## Fix: UI/UX Polish
+- [x] Implement smooth fade/slide transitions for tab switching
+- [x] Refine mobile layout (smaller padding, better spacing)
+- [x] Fix swap button alignment and size on mobile
+- [x] Improve visual hierarchy and whitespace
+- [x] Fix CSS syntax errors introduced during editing
+- [ ] Deploy UI/UX polish to GitHub Pages
