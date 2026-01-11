@@ -103,3 +103,10 @@
 - [x] Add scrolling stock ticker to header
 - [x] Enhance input fields for tactile, app-like feel
 - [x] Deploy Streamlined UX to GitHub Pages
+
+## Fix: Dark Mode
+- [x] Add dark mode toggle button to header
+- [x] Implement dark mode CSS overrides for new Candy Pop elements
+- [x] Add JavaScript logic for theme toggling and persistence
+- [x] Ensure dark mode compatibility with tabbed interface and ticker
+- [ ] Deploy dark mode fix to GitHub Pages
