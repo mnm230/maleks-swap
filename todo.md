@@ -101,5 +101,5 @@
 - [x] Design tabbed navigation system (Swap, Stocks, Insights)
 - [x] Implement single-card layout for focused interaction
 - [x] Add scrolling stock ticker to header
-- [ ] Enhance input fields for tactile, app-like feel
-- [ ] Deploy Streamlined UX to GitHub Pages
+- [x] Enhance input fields for tactile, app-like feel
+- [x] Deploy Streamlined UX to GitHub Pages
