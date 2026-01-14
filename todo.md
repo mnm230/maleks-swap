@@ -124,4 +124,11 @@
 - [x] Add cache expiration logic (1 hour)
 - [x] Optimize Google Fonts loading with `font-display: swap` and non-blocking CSS
 - [x] Ensure immediate rendering of cached data before API calls
-- [ ] Deploy performance optimizations to GitHub Pages
+- [x] Deploy performance optimizations to GitHub Pages
+
+## Improvement: UI/UX Analysis
+- [x] Replace native `alert()` with custom toast notifications
+- [x] Add slide-in/slide-out animations for toasts
+- [x] Style currency selectors with custom SVG arrow and better padding
+- [x] Remove default browser styling for select inputs (`appearance: none`)
+- [ ] Deploy UI/UX improvements to GitHub Pages
