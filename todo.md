@@ -156,4 +156,11 @@
 - [x] Fix potential overflow issues in `page-container`
 - [x] Ensure `ticker-wrap` doesn't overlap with header content
 - [x] Verify dark mode styles persist correctly in mobile view
-- [ ] Deploy critical layout fixes to GitHub Pages
+- [x] Deploy critical layout fixes to GitHub Pages
+
+## Optimization: Progressive Web App (PWA)
+- [x] Create `manifest.json` for app installability
+- [x] Implement `service-worker.js` for offline caching
+- [x] Add resource hints (`preconnect`, `dns-prefetch`) for faster API connections
+- [x] Register Service Worker in `index.html`
+- [ ] Deploy PWA updates to GitHub Pages
