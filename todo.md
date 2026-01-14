@@ -117,4 +117,11 @@
 - [x] Fix swap button alignment and size on mobile
 - [x] Improve visual hierarchy and whitespace
 - [x] Fix CSS syntax errors introduced during editing
-- [ ] Deploy UI/UX polish to GitHub Pages
+- [x] Deploy UI/UX polish to GitHub Pages
+
+## Optimization: Performance
+- [x] Implement LocalStorage caching for stocks, rates, and gold prices
+- [x] Add cache expiration logic (1 hour)
+- [x] Optimize Google Fonts loading with `font-display: swap` and non-blocking CSS
+- [x] Ensure immediate rendering of cached data before API calls
+- [ ] Deploy performance optimizations to GitHub Pages

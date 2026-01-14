@@ -7,7 +7,10 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌌</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
     <style>
         :root {
             --bg-dark: #030014;
@@ -1129,6 +1132,7 @@
         // Fetch live stock prices from Finnhub
         async function updateStockPrices() {
             const symbols = Object.keys(stockData);
+            let hasUpdates = false;
             
             for (const symbol of symbols) {
                 try {
@@ -1141,6 +1145,7 @@
                     if (data.c) {
                         stockData[symbol].price = data.c;
                         stockData[symbol].change = data.dp; // Using percentage change for display consistency
+                        hasUpdates = true;
                     }
                 } catch (error) {
                     console.error(`Failed to fetch stock data for ${symbol}:`, error);
@@ -1150,7 +1155,10 @@
                 await new Promise(r => setTimeout(r, 200));
             }
             
-            updateStocks();
+            if (hasUpdates) {
+                updateStocks();
+                saveToCache();
+            }
         }
 
         // Handle Enter key in search input
