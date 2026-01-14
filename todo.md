@@ -141,4 +141,12 @@
 - [x] Apply sharp edges and hard shadows (4px offset)
 - [x] Update typography to bold, uppercase headings
 - [x] Refine input fields and buttons for flat, high-contrast look
-- [ ] Deploy Swiss Style redesign to GitHub Pages
+- [x] Deploy Swiss Style redesign to GitHub Pages
+
+## Optimization: Mobile & Responsive Polish
+- [x] Reduce padding on mobile (40px -> 24px)
+- [x] Adjust font sizes for better readability on small screens
+- [x] Fix swap button alignment and touch target size
+- [x] Implement tab bar style for mobile navigation (bottom border)
+- [x] Ensure shadows and borders scale correctly without overflow
+- [ ] Deploy optimized design to GitHub Pages
