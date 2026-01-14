@@ -131,4 +131,14 @@
 - [x] Add slide-in/slide-out animations for toasts
 - [x] Style currency selectors with custom SVG arrow and better padding
 - [x] Remove default browser styling for select inputs (`appearance: none`)
-- [ ] Deploy UI/UX improvements to GitHub Pages
+- [x] Deploy UI/UX improvements to GitHub Pages
+
+## Redesign: Swiss Style (International Typographic Style)
+- [x] Fix CSS syntax error in media queries
+- [x] Implement Swiss color palette (Red, Black, White, Grey)
+- [x] Add grid background pattern
+- [x] Remove rounded corners and soft shadows
+- [x] Apply sharp edges and hard shadows (4px offset)
+- [x] Update typography to bold, uppercase headings
+- [x] Refine input fields and buttons for flat, high-contrast look
+- [ ] Deploy Swiss Style redesign to GitHub Pages
