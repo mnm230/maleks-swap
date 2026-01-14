@@ -149,4 +149,11 @@
 - [x] Fix swap button alignment and touch target size
 - [x] Implement tab bar style for mobile navigation (bottom border)
 - [x] Ensure shadows and borders scale correctly without overflow
-- [ ] Deploy optimized design to GitHub Pages
+- [x] Deploy optimized design to GitHub Pages
+
+## Fix: Layout Stability
+- [x] Consolidate duplicate media queries to prevent CSS conflicts
+- [x] Fix potential overflow issues in `page-container`
+- [x] Ensure `ticker-wrap` doesn't overlap with header content
+- [x] Verify dark mode styles persist correctly in mobile view
+- [ ] Deploy critical layout fixes to GitHub Pages
