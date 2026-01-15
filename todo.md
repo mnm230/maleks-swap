@@ -176,4 +176,10 @@
 - [x] Fix offline indicator z-index and shadow
 - [x] Stabilize share button spacing and style
 - [x] Enforce card overflow protection
-- [ ] Deploy layout fixes to GitHub Pages
+- [x] Deploy layout fixes to GitHub Pages
+
+## Update: Precision & Data
+- [x] Update result formatting to 2-6 decimal places
+- [x] Integrate Finnhub API for Gold prices
+- [x] Align exchange rate logic with user request
+- [ ] Deploy updates to GitHub Pages
