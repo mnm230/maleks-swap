@@ -170,4 +170,10 @@
 - [x] Implement haptic feedback (Vibration API)
 - [x] Replace text loaders with skeleton screens
 - [x] Add native "Share" button for results
-- [ ] Deploy PWA enhancements to GitHub Pages
+- [x] Deploy PWA enhancements to GitHub Pages
+
+## Fix: Layout Regression
+- [x] Fix offline indicator z-index and shadow
+- [x] Stabilize share button spacing and style
+- [x] Enforce card overflow protection
+- [ ] Deploy layout fixes to GitHub Pages

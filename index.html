@@ -129,14 +129,15 @@
             background: var(--primary);
             color: white;
             text-align: center;
-            padding: 8px;
+            padding: 12px;
             font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
-            z-index: 3000;
+            z-index: 9999; /* Ensure it's above everything */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .offline-indicator.visible {
@@ -282,10 +283,13 @@
             border: 1px solid var(--border);
             border-radius: 0;
             padding: 40px;
-            box-shadow: 12px 12px 0 rgba(0,0,0,0.1); /* Softer hard shadow */
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.1);
             margin-bottom: 0;
             max-width: 600px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1; /* Ensure card stays below fixed elements */
+            overflow: hidden; /* Prevent content spill */
         }
 
         .glass-card:hover {
@@ -308,15 +312,18 @@
             background: transparent;
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 0; /* Swiss style square */
             font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 16px;
             transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .share-btn:hover {
