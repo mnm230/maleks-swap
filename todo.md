@@ -163,4 +163,11 @@
 - [x] Implement `service-worker.js` for offline caching
 - [x] Add resource hints (`preconnect`, `dns-prefetch`) for faster API connections
 - [x] Register Service Worker in `index.html`
-- [ ] Deploy PWA updates to GitHub Pages
+- [x] Deploy PWA updates to GitHub Pages
+
+## Enhancement: PWA Polish
+- [x] Add offline status indicator (Red banner)
+- [x] Implement haptic feedback (Vibration API)
+- [x] Replace text loaders with skeleton screens
+- [x] Add native "Share" button for results
+- [ ] Deploy PWA enhancements to GitHub Pages
