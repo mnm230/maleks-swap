@@ -405,7 +405,7 @@
 
         .gold-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 12px;
             font-size: 0.875rem;
         }
@@ -509,7 +509,10 @@
             grid-template-columns: 1fr auto 1fr;
             gap: 32px;
             align-items: end;
-            margin        /* Stock Search */
+            margin-bottom: 32px;
+        }
+
+        /* Stock Search */
         .stock-search {
             display: flex;
             gap: 0.5rem;
@@ -1114,12 +1117,17 @@
                 <div style="margin-top: 32px;">
                     <div class="card-header">
                         <h2 class="card-title">Gold Price (Live)</h2>
+                        <span class="stock-change change-neutral" id="goldChange">Loading...</span>
                     </div>
                     <div class="gold-price skeleton" id="goldPrice" style="width: 150px; height: 40px; margin-bottom: 10px;">Loading...</div>
                     <div class="gold-details">
                         <div class="gold-detail-item">
+                            <div class="gold-detail-label">Per Ounce</div>
+                            <div class="gold-detail-value skeleton" id="goldPerOz" style="width: 80px; height: 20px;">...</div>
+                        </div>
+                        <div class="gold-detail-item">
                             <div class="gold-detail-label">Per Gram</div>
-                            <div class="gold-detail-value skeleton" id="goldGram" style="width: 80px; height: 20px;">...</div>
+                            <div class="gold-detail-value skeleton" id="goldPerGram" style="width: 80px; height: 20px;">...</div>
                         </div>
                         <div class="gold-detail-item">
                             <div class="gold-detail-label">Per Kilo</div>
@@ -1241,6 +1249,49 @@
             pricePerOz: 4509.00,
             change: 0.68
         };
+
+        // Haptic feedback function
+        function vibrate(pattern) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        // Cache implementation for offline support
+        function saveToCache() {
+            try {
+                const cacheData = {
+                    exchangeRates,
+                    changes24h,
+                    stockData,
+                    goldData,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('maleksSwapCache', JSON.stringify(cacheData));
+            } catch (error) {
+                console.error('Failed to save to cache:', error);
+            }
+        }
+
+        function loadFromCache() {
+            try {
+                const cached = localStorage.getItem('maleksSwapCache');
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    // Only use cache if less than 1 hour old
+                    if (Date.now() - data.timestamp < 3600000) {
+                        Object.assign(exchangeRates, data.exchangeRates);
+                        Object.assign(changes24h, data.changes24h);
+                        Object.assign(stockData, data.stockData);
+                        Object.assign(goldData, data.goldData);
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load from cache:', error);
+            }
+            return false;
+        }
 
         // Cached DOM elements
         const elements = {
@@ -1403,16 +1454,23 @@
             updateOnlineStatus();
 
             cacheElements();
+
+            // Load cached data if available
+            const hasCache = loadFromCache();
+            if (hasCache) {
+                console.log('Loaded data from cache');
+            }
+
             setupEventListeners();
             updateRatesMatrix();
             updateStocks();
             updateGold();
             calculateConversion();
-            
+
             // Start auto-update interval (60 seconds)
             updateInterval = setInterval(updateRates, 60000);
             setInterval(updateStockPrices, 60000); // Update stock prices every minute
-            
+
             // Initial update
             updateRates();
             updateStockPrices(); // Initial stock fetch
@@ -1590,15 +1648,15 @@
         function updateStocks() {
             const fragment = document.createDocumentFragment();
             const tickerFragment = document.createDocumentFragment();
-            
+
             Object.entries(stockData).forEach(([symbol, data]) => {
                 // List Item
                 const item = document.createElement('div');
                 item.className = 'stock-item';
-                
+
                 const changeClass = data.change >= 0 ? 'change-positive' : 'change-negative';
                 const changeSign = data.change >= 0 ? '+' : '';
-                
+
                 item.innerHTML = `
                     <div class="stock-header">
                         <span class="stock-symbol">${symbol}</span>
@@ -1619,16 +1677,19 @@
                 `;
                 tickerFragment.appendChild(tickerItem);
             });
-            
-            elements.stocksList.innerHTML = '';
-            elements.stocksList.appendChild(fragment);
 
-            // Update Ticker
+            if (elements.stocksList) {
+                elements.stocksList.innerHTML = '';
+                elements.stocksList.appendChild(fragment);
+            }
+
+            // Update Ticker - duplicate content for seamless loop
             const ticker = document.getElementById('stockTicker');
             if (ticker) {
                 ticker.innerHTML = '';
-                ticker.appendChild(tickerFragment);
-                // Duplicate for seamless loop if needed, or CSS handles it
+                // Add content twice for seamless loop
+                ticker.appendChild(tickerFragment.cloneNode(true));
+                ticker.appendChild(tickerFragment.cloneNode(true));
             }
         }
 
@@ -1636,16 +1697,37 @@
         function updateGold() {
             const changeClass = goldData.change >= 0 ? 'change-positive' : 'change-negative';
             const changeSign = goldData.change >= 0 ? '+' : '';
-            
+
+            // Update main price display
             elements.goldPrice.textContent = `$${goldData.pricePerOz.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            elements.goldChange.textContent = `${changeSign}${goldData.change.toFixed(2)}%`;
-            elements.goldChange.className = `stock-change ${changeClass}`;
-            
-            elements.goldPerOz.textContent = `$${Math.round(goldData.pricePerOz).toLocaleString()}`;
-            
+            elements.goldPrice.classList.remove('skeleton');
+
+            // Update change indicator
+            if (elements.goldChange) {
+                elements.goldChange.textContent = `${changeSign}${goldData.change.toFixed(2)}%`;
+                elements.goldChange.className = `stock-change ${changeClass}`;
+            }
+
+            // Update per ounce
+            if (elements.goldPerOz) {
+                elements.goldPerOz.textContent = `$${Math.round(goldData.pricePerOz).toLocaleString()}`;
+                elements.goldPerOz.classList.remove('skeleton');
+            }
+
             // 1 Troy Ounce = 31.1035 Grams
             const pricePerGram = goldData.pricePerOz / 31.1035;
-            elements.goldPerGram.textContent = `$${pricePerGram.toFixed(2)}`;
+            if (elements.goldPerGram) {
+                elements.goldPerGram.textContent = `$${pricePerGram.toFixed(2)}`;
+                elements.goldPerGram.classList.remove('skeleton');
+            }
+
+            // 1 Kilogram = 1000 Grams
+            const pricePerKilo = pricePerGram * 1000;
+            const goldKilo = document.getElementById('goldKilo');
+            if (goldKilo) {
+                goldKilo.textContent = `$${pricePerKilo.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                goldKilo.classList.remove('skeleton');
+            }
         }
 
         // Fetch live rates from API
@@ -1729,13 +1811,16 @@
                 // Update UI
                 updateRatesMatrix();
                 calculateConversion();
-                
+
+                // Save to cache
+                saveToCache();
+
                 // Update timestamp
                 const now = new Date();
                 elements.footerUpdate.textContent = `Last updated: ${now.toLocaleTimeString()}`;
-                
+
                 console.log('Live rates updated:', exchangeRates);
-                
+
             } catch (error) {
                 console.error('Failed to fetch rates:', error);
                 updateRatesMatrix();
