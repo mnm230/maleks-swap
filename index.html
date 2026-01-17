@@ -1344,32 +1344,53 @@
         async function updateStockPrices() {
             const symbols = Object.keys(stockData);
             let hasUpdates = false;
-            
+            let successCount = 0;
+            let errorCount = 0;
+
+            console.log(`Updating ${symbols.length} stock prices...`);
+
             for (const symbol of symbols) {
                 try {
                     const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
                     const data = await response.json();
-                    
+
+                    // Validate response data
                     // Finnhub response: c = current price, d = change, dp = percent change
-                    if (data.c) {
+                    if (data && data.c && data.c > 0) {
                         stockData[symbol].price = data.c;
-                        stockData[symbol].change = data.dp; // Using percentage change for display consistency
+                        stockData[symbol].change = data.dp || 0; // Using percentage change
                         hasUpdates = true;
+                        successCount++;
+                        console.log(`✓ ${symbol}: $${data.c.toFixed(2)} (${data.dp > 0 ? '+' : ''}${data.dp?.toFixed(2)}%)`);
+                    } else {
+                        console.warn(`Invalid data for ${symbol}:`, data);
+                        errorCount++;
                     }
                 } catch (error) {
-                    console.error(`Failed to fetch stock data for ${symbol}:`, error);
+                    console.error(`✗ Failed to fetch ${symbol}:`, error.message);
+                    errorCount++;
                 }
-                
-                // Add small delay to avoid rate limits (Finnhub free tier: 30 calls/sec, but good to be safe)
+
+                // Add delay to respect rate limits (Finnhub free tier: 60 calls/min)
                 await new Promise(r => setTimeout(r, 200));
             }
-            
+
+            console.log(`Stock update complete: ${successCount} success, ${errorCount} errors`);
+
             if (hasUpdates) {
                 updateStocks();
                 saveToCache();
+            } else if (errorCount === symbols.length) {
+                console.error('All stock updates failed');
+                showToast('Failed to update stock prices', 'error');
             }
+
+            return hasUpdates;
         }
 
         // Handle Enter key in search input
@@ -1734,78 +1755,115 @@
         async function updateRates() {
             if (isLoading) return;
             isLoading = true;
-            
+
             if (elements.refreshBtn) {
                 elements.refreshBtn.textContent = 'Updating...';
                 elements.refreshBtn.disabled = true;
             }
-            
+
             try {
                 // Using CoinGecko API (Free, no key required)
+                // CoinGecko returns: { tether: { usd: 1.00, eur: 0.95, ... }, usd-coin: {...} }
+                // Meaning: 1 USDT = 1.00 USD, 1 USDT = 0.95 EUR, etc.
                 const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether,usd-coin&vs_currencies=usd,eur,gbp,aed,php&include_24hr_change=true');
-                
-                if (!response.ok) throw new Error('API request failed');
-                
-                const data = await response.json();
-                
-                // Update Rates based on CoinGecko Data
-                if (data.tether && data['usd-coin']) {
-                    // Set USD as base = 1
-                    exchangeRates.USD = 1;
-                    
-                    // Calculate EUR rate relative to USD
-                    // CoinGecko gives us USDT in EUR and USDT in USD
-                    // So 1 USD = (USDT_in_EUR / USDT_in_USD) EUR
-                    // But simpler: just use the direct rates if available, or derive
-                    // Let's stick to the user's requested logic structure for clarity:
-                    
-                    exchangeRates.EUR = data.tether.eur / data.tether.usd; // Derived EUR rate
-                    exchangeRates.USDT = data.tether.usd; // Price of 1 USDT in USD? No, usually we want "How many USDT per 1 USD" or "Price of 1 Unit in USD"
-                    // The user code was: exchangeRates.USDT = data.tether.usd;
-                    // If data.tether.usd is 1.00, then 1 Unit = $1.00.
-                    // Our converter logic expects exchangeRates[CURRENCY] to be the value relative to base (USD).
-                    // If base is USD=1, then exchangeRates.EUR should be ~0.95 (1 USD = 0.95 EUR).
-                    // CoinGecko returns: tether.usd = 1.00, tether.eur = 0.95.
-                    // So 1 USDT = $1.00, 1 USDT = €0.95.
-                    
-                    // Let's implement exactly what was requested but ensure it fits the converter math:
-                    // If the converter divides by rate (Amount / Rate), then Rate = Value in USD.
-                    // If the converter multiplies (Amount * Rate), then Rate = Value per USD.
-                    
-                    // Current logic: const toRate = exchangeRates[toCurrency]; const fromRate = exchangeRates[fromCurrency];
-                    // const rate = toRate / fromRate;
-                    // This implies rates are "Units per Base". e.g. USD=1, EUR=0.95 (1 USD = 0.95 EUR).
-                    
-                    // User snippet: exchangeRates.USDT = data.tether.usd (which is ~1.00)
-                    // If we use this, then 1 USD = 1 USDT. Correct.
-                    
-                    exchangeRates.USDT = 1 / data.tether.usd; // Normalize: How many USDT for 1 USD
-                    exchangeRates.USDC = 1 / data['usd-coin'].usd; // Normalize: How many USDC for 1 USD
-                    
-                    // For fiat, we need to derive from the USDT pair since we are using that as a bridge in this specific API call
-                    // Or better, just use the values derived from the ratio
-                    exchangeRates.EUR = data.tether.eur / data.tether.usd;
-                    exchangeRates.GBP = data.tether.gbp / data.tether.usd;
-                    exchangeRates.AED = data.tether.aed / data.tether.usd;
-                    exchangeRates.PHP = data.tether.php / data.tether.usd;
 
-                    // Update 24h changes
+                if (!response.ok) {
+                    throw new Error(`CoinGecko API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('CoinGecko API response:', data);
+
+                // Validate response
+                if (!data.tether || !data['usd-coin']) {
+                    throw new Error('Invalid API response structure');
+                }
+
+                // Check if required currency data exists
+                const requiredCurrencies = ['usd', 'eur', 'gbp', 'aed', 'php'];
+                for (const curr of requiredCurrencies) {
+                    if (!data.tether[curr]) {
+                        console.warn(`Missing ${curr} rate in API response`);
+                    }
+                }
+
+                // Update exchange rates
+                // Our format: exchangeRates[currency] = how many of that currency per 1 USD
+                // CoinGecko format: data.tether[currency] = price of 1 USDT in that currency
+
+                exchangeRates.USD = 1.0000; // Base currency
+
+                // For stablecoins: 1 USDT = X USD, so 1 USD = 1/X USDT
+                if (data.tether.usd) {
+                    exchangeRates.USDT = 1 / data.tether.usd;
+                }
+                if (data['usd-coin'].usd) {
+                    exchangeRates.USDC = 1 / data['usd-coin'].usd;
+                }
+
+                // For fiat: 1 USDT = Y EUR and 1 USDT = X USD
+                // Therefore: 1 USD = (Y/X) EUR
+                if (data.tether.eur && data.tether.usd) {
+                    exchangeRates.EUR = data.tether.eur / data.tether.usd;
+                }
+                if (data.tether.gbp && data.tether.usd) {
+                    exchangeRates.GBP = data.tether.gbp / data.tether.usd;
+                }
+                if (data.tether.aed && data.tether.usd) {
+                    exchangeRates.AED = data.tether.aed / data.tether.usd;
+                }
+                if (data.tether.php && data.tether.usd) {
+                    exchangeRates.PHP = data.tether.php / data.tether.usd;
+                }
+
+                // Update 24h changes (with null checks)
+                if (data.tether.usd_24h_change !== undefined) {
                     changes24h.USDT = data.tether.usd_24h_change;
+                }
+                if (data['usd-coin'].usd_24h_change !== undefined) {
                     changes24h.USDC = data['usd-coin'].usd_24h_change;
                 }
-                
+
+                // Derive 24h changes for fiat currencies from USDT changes
+                if (data.tether.eur_24h_change !== undefined) {
+                    changes24h.EUR = data.tether.eur_24h_change - (data.tether.usd_24h_change || 0);
+                }
+                if (data.tether.gbp_24h_change !== undefined) {
+                    changes24h.GBP = data.tether.gbp_24h_change - (data.tether.usd_24h_change || 0);
+                }
+                if (data.tether.aed_24h_change !== undefined) {
+                    changes24h.AED = data.tether.aed_24h_change - (data.tether.usd_24h_change || 0);
+                }
+                if (data.tether.php_24h_change !== undefined) {
+                    changes24h.PHP = data.tether.php_24h_change - (data.tether.usd_24h_change || 0);
+                }
+
+                console.log('Updated exchange rates:', exchangeRates);
+                console.log('Updated 24h changes:', changes24h);
+
                 // Fetch Gold Price from Finnhub
                 try {
                     const goldRes = await fetch(`https://finnhub.io/api/v1/quote?symbol=OANDA:XAU_USD&token=${FINNHUB_API_KEY}`);
+
+                    if (!goldRes.ok) {
+                        throw new Error(`Finnhub API error: ${goldRes.status}`);
+                    }
+
                     const gold = await goldRes.json();
-                    
-                    if (gold.c) {
+                    console.log('Finnhub gold response:', gold);
+
+                    // Validate gold data
+                    if (gold && gold.c && gold.c > 0) {
                         goldData.pricePerOz = gold.c;
-                        goldData.change = gold.dp;
+                        goldData.change = gold.dp || 0;
                         updateGold();
+                        console.log('Gold price updated:', goldData);
+                    } else {
+                        console.warn('Invalid gold price data:', gold);
                     }
                 } catch (e) {
                     console.error('Failed to fetch gold price:', e);
+                    // Continue even if gold fetch fails
                 }
 
                 // Update UI
@@ -1819,16 +1877,16 @@
                 const now = new Date();
                 elements.footerUpdate.textContent = `Last updated: ${now.toLocaleTimeString()}`;
 
-                console.log('Live rates updated:', exchangeRates);
-
             } catch (error) {
                 console.error('Failed to fetch rates:', error);
+                showToast('Failed to update rates. Using cached data.', 'error');
+                // Still update UI with existing/cached data
                 updateRatesMatrix();
                 calculateConversion();
             } finally {
                 isLoading = false;
                 if (elements.refreshBtn) {
-                    elements.refreshBtn.textContent = 'Refresh Rates';
+                    elements.refreshBtn.textContent = 'Refresh';
                     elements.refreshBtn.disabled = false;
                 }
             }
